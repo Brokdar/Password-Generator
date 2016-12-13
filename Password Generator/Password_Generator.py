@@ -15,7 +15,6 @@ requirements.add_argument("--lower", type=int, help = "Number of minimum lowerca
 requirements.add_argument("--digits", type=int, help = "Number of minimum digits", default = 0)
 requirements.add_argument("--symbols", type=int, help = "Number of minimum symbols", default = 0)
 
-
 args = parser.parse_args()
 
 allowed_uppercases = ''.join(c for c in args.alphabet if c in string.ascii_lowercase)
@@ -23,15 +22,17 @@ allowed_lowercases = ''.join(c for c in args.alphabet if c in string.ascii_upper
 allowed_digits = ''.join(c for c in args.alphabet if c in string.digits)
 allowed_symbols = ''.join(c for c in args.alphabet if c in string.punctuation)
 
-
 requiredLength = args.lower + args.upper + args.digits + args.symbols
 if args.length < requiredLength:
     args.length = requiredLength
 
-password = generate_password(allowed_uppercases, args.upper)
-password += generate_password(allowed_lowercases, args.lower)
-password += generate_password(allowed_digits, args.digits)
-password += generate_password(allowed_symbols, args.symbols)
-password += generate_password(args.alphabet, args.length - requiredLength)
+try:
+    password = generate_password(allowed_uppercases, args.upper)
+    password += generate_password(allowed_lowercases, args.lower)
+    password += generate_password(allowed_digits, args.digits)
+    password += generate_password(allowed_symbols, args.symbols)
+    password += generate_password(args.alphabet, args.length - requiredLength)
 
-print(''.join(SystemRandom().sample(password, len(password))))
+    print(''.join(SystemRandom().sample(password, len(password))))
+except IndexError:
+    print("Invalid alphabet to fulfill all requirements")
